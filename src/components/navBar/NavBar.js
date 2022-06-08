@@ -24,18 +24,20 @@ const NavBar = () => {
         <Typography variant='h6'>JournalApp</Typography>
         <Box className="fadeIn" ml={20}>
           <NavLink 
-            to="/marvel"
+            to="/journal"
             className={ ({ isActive }) => isActive && 'activeLink' }
           >
-            <Button sx={{color: 'white'}}>
-              Marvel
+            <Button sx={{color: 'white', mr:5}}>
+              New Event
             </Button>
           </NavLink>
           <NavLink 
-            to="/dc"
+            to="/list"
             className={ ({ isActive }) => isActive && 'activeLink' }
           >
-          <Button sx={{color: 'white'}}>DC</Button>
+          <Button sx={{color: 'white', mr:5}}>
+            Calendar
+          </Button>
           </NavLink>
           <NavLink 
             to="/search"

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -7,41 +8,75 @@ import { Button, CardMedia, Divider, Grid, Typography, TextField } from '@mui/ma
 
 
 const JournalPage = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [value, setValue] = useState(new Date());
 
   const handleChange = (newValue) => {
     setValue(newValue);
   };
 
+  const onSubmit = (form) => {
+    console.log(form)
+  }
+
   return (
     <>
       <Typography pt={5} variant='h4' component='h4'>New Event</Typography>
       <Divider />
-      <Grid container xs={12} spacing={2} sx={{mt: 2 }}>
+      <Grid container spacing={2} sx={{mt: 2 }}>
       <Grid item xs={8}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid item xs={12}>
             <TextField
               label='Title'
               fullWidth
+              {...register('title', {
+                required: 'Title is required',
+                minLength: { value: '5', message: '+5 characters' }
+              })}
+              error={!!errors.title}
+              helperText={errors.title?.message}
               />
           </Grid>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Grid container xs={12}  >
+        <Grid container>
           <Grid item xs={6} mt={2} sx={{paddingRight: 2}}>
             <MobileDatePicker
-              label="Date mobile"
+              label="Date Event"
               inputFormat="MM/dd/yyyy"
               value={value}
               onChange={handleChange}
-              renderInput={(params) => <TextField fullWidth {...params} />}
+              renderInput={(params) => (
+                <TextField
+                  fullWidth 
+                  {...params} 
+                  {...register('date', {
+                    required: 'Date is required'
+                  })}
+                  error={!!errors.date}
+                  helperText={errors.date?.message}
+                />
+              
+              )}
             />
           </Grid>
           <Grid item xs={6}  mt={2}>
             <TimePicker
-              label="Time"
+              label="Time Event"
               value={value}
               onChange={handleChange}
-              renderInput={(params) => <TextField fullWidth {...params} />}
+              renderInput={(params) => (
+                <TextField 
+                  fullWidth 
+                  {...params} 
+                  {...register('time', {
+                    required: 'Time is required'
+                  })}
+                  error={!!errors.time}
+                  helperText={errors.time?.message}
+                />
+              
+              )}
             />
           </Grid>
           </Grid>
@@ -52,10 +87,16 @@ const JournalPage = () => {
             fullWidth
             multiline
             rows={8}
-            maxRows={20}
+            {...register('description',{
+              required: 'Description is required',
+              minLength: { value: 10, message: '+10 characters'},
+              maxLength: { value: 1000, message: 'Max characters reach'}
+            })}
+            error={!!errors.description}
+            helperText={errors.description?.message}
           />
         </Grid>
-        <Grid container xs={12} mt={2}>
+        <Grid container mt={2}>
             <Grid item xs={6} sx={{paddingRight: 2}}>
             <Button
             variant='outlined'
@@ -67,9 +108,11 @@ const JournalPage = () => {
           <Button
             variant='outlined'
             fullWidth
+            type='submit'
             >Save</Button>
           </Grid>
         </Grid>
+      </form>
       </Grid>
       <Grid item xs={4} pl={5}>
         <CardMedia

@@ -1,12 +1,21 @@
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Button, Grid, TextField, Typography } from "@mui/material"
-import { useNavigate } from "react-router-dom";
+import { registerUser } from "../../actions/authActions";
 
 const RegisterPage = () => {
   const navigate = useNavigate()
+  const dispatch = useDispatch()
   const { register, handleSubmit, formState: { errors }, getValues } = useForm();
+
+
   const onSubmit = (form) => {
-    console.log(form)
+    try {
+      dispatch(registerUser(form))
+    } catch (error) {
+      console.warn(error)
+    }
   }
 
   return (
@@ -19,12 +28,12 @@ const RegisterPage = () => {
               type='text'
               fullWidth
               label='Username'
-              { ...register('username', {
+              { ...register('displayName', {
                 required: 'Username is required',
                 minLength: { value: 3, message: '+2 characters' }
               })}
-              error={!!errors.username}
-              helperText={errors.username?.message}
+              error={!!errors.displayName}
+              helperText={errors.displayName?.message}
             />
           </Grid>
           <Grid item xs={12} mt={2}>

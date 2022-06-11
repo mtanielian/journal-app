@@ -2,12 +2,28 @@ import { useForm } from "react-hook-form";
 import { Button, Grid, TextField, Typography } from "@mui/material"
 import { useNavigate } from "react-router-dom";
 import GoogleIcon from '@mui/icons-material/Google';
+import { useDispatch } from "react-redux";
+import { doLogin, loginGoogle } from "../../actions/authActions";
 
 const LoginPage = () => {
   const navigate = useNavigate()
   const { register, handleSubmit, formState: { errors } } = useForm();
+
+  const dispatch = useDispatch()
   const onSubmit = (form) => {
     console.log(form)
+    /*
+    dispatch(doLogin({
+      id: new Date().getTime(),
+      username: 'martin.tanielian.ok',
+      email: form.email
+    }))
+    */
+  }
+
+  const handleGoogleLogin = () => {
+    dispatch(loginGoogle())
+
   }
 
   return (
@@ -52,7 +68,12 @@ const LoginPage = () => {
             >Login</Button>
           </Grid>
         </form>
-        <Button fullWidth variant="contained" sx={{mt:4, textAlign: "center"}} startIcon={ <GoogleIcon /> }>
+        <Button 
+          variant="contained" sx={{mt:4, textAlign: "center"}} 
+          startIcon={ <GoogleIcon /> }
+          fullWidth 
+          onClick={handleGoogleLogin}
+        >
           <Typography variant="subtitle2">Sign in with google</Typography>
         </Button>
 

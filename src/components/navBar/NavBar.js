@@ -4,10 +4,17 @@ import MenuIcon from '@mui/icons-material/Menu';
 import './navbar.css'
 import { useContext } from 'react';
 import { UiContext } from '../../contexts/UiContext';
+import { logout } from '../../actions/authActions';
+import { useDispatch } from 'react-redux';
 
 const NavBar = () => {
   const { toggleMenu } = useContext(UiContext)
-  
+  const dispatch = useDispatch()
+
+  const handleLogout = () => {
+    dispatch(logout())
+  }
+
   return (
     <AppBar>
       <Toolbar>
@@ -47,7 +54,7 @@ const NavBar = () => {
           </NavLink>
         </Box>
         <Box flex={ 1 } />
-        <Button sx={{color: 'white'}}>
+        <Button sx={{color: 'white'}} onClick={handleLogout}>
             Logout
         </Button> 
       </Toolbar>

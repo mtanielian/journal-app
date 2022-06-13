@@ -1,7 +1,5 @@
 import { actionsTypes } from "../types/actionsTypes";
 import { auth, googleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, updateProfile } from '../firebase/firebaseConfig';
-import { async } from "@firebase/util";
-
 
 export const doLogin = ({ uid, displayName, email }) => ({
   type: actionsTypes.login,

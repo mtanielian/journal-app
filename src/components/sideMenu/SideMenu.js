@@ -4,10 +4,28 @@ import { AddBoxOutlined, CalendarMonth } from '@mui/icons-material';
 import { Box } from "@mui/system";
 import { UiContext } from '../../contexts/UiContext';
 import JournalItem from "../journal/JournalItem";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
 
 const SideMenu = () => {
   const { menuOpen, toggleMenu } = useContext(UiContext)
+  const { events } = useSelector(state => state.events)
 
+  const onDelete = async (id) => {
+
+    const response = await Swal.fire({
+      title: 'Do you want to save the changes?',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',      
+    })
+    console.log(response)
+  }
+
+  const onEdit = (id) => {
+    console.log('edit: ', id)
+  }
+
+  
   return (
     <Drawer
       anchor='left'
@@ -15,7 +33,7 @@ const SideMenu = () => {
       onClose={toggleMenu}
     >
       <Box
-        sx={{ width: 350 }}
+        sx={{ width: 450 }}
         role="presentation"
       >
       <Toolbar />
@@ -42,8 +60,12 @@ const SideMenu = () => {
       </List>
       <Divider>Last Events</Divider>
       <List>
-      {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(e => 
-        <JournalItem key={e} />
+      {events.map(e => 
+        <JournalItem 
+          key={e.id} event={e} 
+          onDelete={onDelete}
+          onEdit={onEdit}
+        />
       )}
       </List>
     </Box>

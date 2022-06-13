@@ -5,9 +5,10 @@ import './navbar.css'
 import { useContext } from 'react';
 import { UiContext } from '../../contexts/UiContext';
 import { logout } from '../../actions/authActions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const NavBar = () => {
+  const { displayName } = useSelector(state => state.auth)
   const { toggleMenu } = useContext(UiContext)
   const dispatch = useDispatch()
 
@@ -54,6 +55,7 @@ const NavBar = () => {
           </NavLink>
         </Box>
         <Box flex={ 1 } />
+        <Typography variant='subtitle1'>{displayName} - </Typography>
         <Button sx={{color: 'white'}} onClick={handleLogout}>
             Logout
         </Button> 

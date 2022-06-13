@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { doLogin } from "../../actions/authActions"
+import { loadRecentEvents } from "../../actions/eventActions"
 import { auth } from "../../firebase/firebaseConfig"
 
 import LoginPage from "../../pages/auth/LoginPage"
@@ -20,6 +21,7 @@ const AppRouter = () => {
       if (user?.uid) {
         const { uid, displayName, email } = user
         dispatch(doLogin({ uid, displayName, email }))
+        dispatch(loadRecentEvents())
       }
       setCheking(false)
     })

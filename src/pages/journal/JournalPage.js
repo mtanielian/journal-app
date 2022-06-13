@@ -1,22 +1,36 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Button, CardMedia, Divider, Grid, Typography, TextField } from '@mui/material';
+import dayjs from 'dayjs';
+import { save } from '../../actions/eventActions'
+import { Button, CardMedia, Divider, Grid, Typography, TextField } from '@mui/material'
+import Swal from 'sweetalert2';
+
+
 
 
 const JournalPage = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const [value, setValue] = useState(new Date());
+  const dispatch = useDispatch()
+  const { loading } = useSelector(state => state.events)
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const today = new Date()
+ 
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
-
-  const onSubmit = (form) => {
-    console.log(form)
+  const onSubmit = async (form) => {
+    try {
+      dispatch(save(form))
+      Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'Taks saved',
+        showConfirmButton: false,
+        timer: 2500
+      })
+      reset()
+    } catch (error) {
+      alert('error saving event, please try again')
+      console.log(error)
+    }
   }
 
   return (
@@ -38,49 +52,34 @@ const JournalPage = () => {
               helperText={errors.title?.message}
               />
           </Grid>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Grid container>
           <Grid item xs={6} mt={2} sx={{paddingRight: 2}}>
-            <MobileDatePicker
-              label="Date Event"
-              inputFormat="MM/dd/yyyy"
-              value={value}
-              onChange={handleChange}
-              renderInput={(params) => (
-                <TextField
-                  fullWidth 
-                  {...params} 
-                  {...register('date', {
-                    required: 'Date is required'
-                  })}
-                  error={!!errors.date}
-                  helperText={errors.date?.message}
-                />
-              
-              )}
+            <TextField
+              fullWidth 
+              type='date'
+              defaultValue={dayjs(today).format('YYYY-MM-DD')}
+              label='Date Event'
+              {...register('date', {
+                required: 'Date is required'
+              })}
+              error={!!errors.date}
+              helperText={errors.date?.message}
             />
           </Grid>
           <Grid item xs={6}  mt={2}>
-            <TimePicker
+            <TextField 
+              fullWidth 
+              type='time'
+              defaultValue={dayjs(today).format('HH:mm')}
               label="Time Event"
-              value={value}
-              onChange={handleChange}
-              renderInput={(params) => (
-                <TextField 
-                  fullWidth 
-                  {...params} 
-                  {...register('time', {
-                    required: 'Time is required'
-                  })}
-                  error={!!errors.time}
-                  helperText={errors.time?.message}
-                />
-              
-              )}
+              {...register('time', {
+                required: 'Time is required'
+              })}
+              error={!!errors.time}
+              helperText={errors.time?.message}
             />
           </Grid>
-          </Grid>
-        </LocalizationProvider>
+        </Grid>
         <Grid item xs={12} mt={2}>
           <TextField
             label='Description'
@@ -109,6 +108,7 @@ const JournalPage = () => {
             variant='outlined'
             fullWidth
             type='submit'
+            disabled={loading}
             >Save</Button>
           </Grid>
         </Grid>

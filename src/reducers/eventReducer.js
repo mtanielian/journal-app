@@ -15,6 +15,8 @@ const eventReducer = (state = INITIAL_STATE, action) => {
       return { ...state, loading: action.payload }
     case actionsTypes.loadEvents:
       return { ...state, events: [ ...action.payload ] }
+    case actionsTypes.deleteEvent:
+      return { ...state, events: state.events.filter(e => e.id !== action.payload) }
     default:
       return state
   }

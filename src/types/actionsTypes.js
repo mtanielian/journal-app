@@ -4,6 +4,6 @@ export const actionsTypes = {
   addEvent: '[event] - add',
   loadEvents: '[event] - load ',
   updateEvent: '[event] - update',
-  removeEvent: '[event] - remove',
+  deleteEvent: '[event] - delete',
   loadingEvent: '[event] - loading'
 }

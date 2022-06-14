@@ -4,12 +4,14 @@ import { AddBoxOutlined, CalendarMonth } from '@mui/icons-material';
 import { Box } from "@mui/system";
 import { UiContext } from '../../contexts/UiContext';
 import JournalItem from "../journal/JournalItem";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
+import { deleteEvent } from "../../actions/eventActions";
 
 const SideMenu = () => {
   const { menuOpen, toggleMenu } = useContext(UiContext)
   const { events } = useSelector(state => state.events)
+  const dispatch = useDispatch()
 
   const onDelete = async (id) => {
 
@@ -18,7 +20,10 @@ const SideMenu = () => {
       showCancelButton: true,
       confirmButtonText: 'Delete',      
     })
-    console.log(response)
+    
+    if (response.isConfirmed) {
+      dispatch(deleteEvent(id))
+    }
   }
 
   const onEdit = (id) => {

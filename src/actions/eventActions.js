@@ -1,4 +1,4 @@
-import { getDocs, limit, orderBy, query, where } from 'firebase/firestore';
+import { getDocs, limit, orderBy, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db, collection, addDoc, Timestamp } from '../firebase/firebaseConfig';
 import { actionsTypes } from '../types/actionsTypes';
 
@@ -17,6 +17,11 @@ const doLoading = (loading) => ({
 const doLoadEvents = (events) => ({
   type: actionsTypes.loadEvents,
   payload: events
+})
+
+const doDelete = (id) => ({
+  type: actionsTypes.deleteEvent,
+  payload: id
 })
 
 export const save = (form) => async (dispatch, getState) => {
@@ -43,4 +48,10 @@ export const loadRecentEvents = () => async (dispatch, getState) => {
   const rs = await getDocs(q)
   const events = rs.docs.map( doc => ({ id: doc.id, ...doc.data() }))
   dispatch(doLoadEvents(events))
+}
+
+
+export const deleteEvent = (id) => async (dispatch, getState) => {
+  deleteDoc(doc(db, collectionName, id))
+  dispatch(doDelete(id))
 }
